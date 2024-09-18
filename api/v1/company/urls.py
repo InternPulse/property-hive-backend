@@ -1,10 +1,9 @@
 from django.urls import path
-from .views import generate_custom_url
+from .views import RealEstateCompanyViewSet
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    path(
-        "companies/generate-url/",
-        generate_custom_url,
-        name="generate_custom_url",
-    ),
-]
+urlpatterns = []
+
+router = DefaultRouter()
+
+router.register(r"generate-url", RealEstateCompanyViewSet, basename="company")
