@@ -17,8 +17,8 @@ def generate_custom_url(request):
 
     return JsonResponse(
         {
-            "statusCode": 200,
+            "status_code": 200,
             "message": "Custom URL generated successfully",
-            "data": {"customUrl": company.custom_url},
+            "data": {"custom_url": company.custom_url},
         }
     )
