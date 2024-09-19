@@ -14,9 +14,8 @@ SECRET_KEY = "django-insecure-x76f#9!$ews_&%(v0uson^tt%rf@11oe47$i&8%_1&!ldhf=%5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
-APPEND_SLASH = False
 
 # Application definition
 
@@ -31,8 +30,8 @@ INSTALLED_APPS = [
     "api.v1.custom_auth",
     "api.v1.transaction",
     "api.v1.common",
-    'rest_framework',
-     'rest_framework.authtoken',
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 AUTH_USER_MODEL = "common.User"
@@ -40,13 +39,13 @@ AUTH_USER_MODEL = "common.User"
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
-        'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
 }
 
 
@@ -133,5 +132,5 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
