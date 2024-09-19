@@ -37,6 +37,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     business_name = models.CharField(max_length=255, blank=True ,unique=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     profile_picture = models.ImageField(upload_to='user_avatars/', blank=True, null=True)
+    custom_url = models.URLField(max_length=500, blank=True, null=True)
     is_company = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -145,6 +146,7 @@ class Ratings(models.Model):
 class Profile(models.Model):
      userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
      propertyid =  models.ForeignKey(Property, on_delete=models.CASCADE, related_name='soldproperties')
+     company_address=models.CharField(max_length=255, blank=True, null=True)
      description= models.TextField(max_length=500)
 
 
