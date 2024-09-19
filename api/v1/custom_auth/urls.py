@@ -1,4 +1,6 @@
 from django.urls import path, include
-from . import views
+from .views import RegisterCompany
 
-urlpatterns = []
+urlpatterns = [
+    path('register',RegisterCompany.as_view())
+]
