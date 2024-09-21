@@ -37,6 +37,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from api.v1.common.models import User
 from rest_framework.permissions import AllowAny
+
 class UserViewset(viewsets.ModelViewSet):
     """
     A ViewSet for listing or retrieving users.
