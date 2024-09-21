@@ -36,7 +36,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from api.v1.common.models import User
-
+from rest_framework.permissions import AllowAny
 class UserViewset(viewsets.ModelViewSet):
     """
     A ViewSet for listing or retrieving users.
@@ -60,6 +60,7 @@ class UserViewset(viewsets.ModelViewSet):
     queryset = User.objects.all()
 
 class RegisterCompany(APIView):
+
     """
     API endpoint for registering a new company.
 
@@ -78,6 +79,7 @@ class RegisterCompany(APIView):
     Returns the registered user data upon successful registration.
 
     """
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

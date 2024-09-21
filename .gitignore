@@ -7,3 +7,4 @@ migrations/
 .gitignore
 .vscode/
 *.pyc
+*.pyo
