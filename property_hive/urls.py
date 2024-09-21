@@ -13,7 +13,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/v1/", include("api.v1.company.urls")),
-    # path("api/v1/", include("api.v1.custom_auth.urls")),
+    path("api/v1/", include("api.v1.custom_auth.urls")),
     # path("api/v1/", include("api.v1.transaction.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 router = DefaultRouter()
