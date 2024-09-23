@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import UserManager,AbstractBaseUser,PermissionsMixin
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 class CustomUserManagement(UserManager):
     def _create_user(self,email,password, **extra_fields):
         if not email:
@@ -66,11 +67,16 @@ class KycDocuments(models.Model):
 
 class Property(models.Model):
     sellerid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='properties')
-    location= models.CharField(max_length=255, )
+    name=models.CharField(max_length=100)
+    state=models.CharField(max_length=255)
+    city=models.CharField(max_length=255)
+    address=models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     squaremeters=models.CharField(max_length=255)
     property_type=models.CharField(max_length=255)
     price =models.IntegerField(null=False, blank=True)
+    is_sold = models.BooleanField(default=False)
+    date_sold = models.DateTimeField(null=True, blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
@@ -92,10 +98,17 @@ class PropertyDocuments(models.Model):
 
 
 class Soldproperties(models.Model):
-    userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_soldproperties')
+    buyerid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_soldproperties')
     propertyid = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_soldproperties')
-    # buyerid = models.ForeignKey(userid, on_delete=models.CASCADE, related_name='soldproperties')
     date_sold=models.DateTimeField(auto_now_add=True)
+    def clean(self):
+        # Validate that the associated property is sold
+        if not self.propertyid.is_sold:
+            raise ValidationError("The property must be marked as sold to create a sale record.")
+
+    def save(self, *args, **kwargs):
+        self.clean()  # Call the clean method to enforce validation
+        super().save(*args, **kwargs)
 
 class Userproperties(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_properties')
@@ -136,7 +149,7 @@ class Ratings(models.Model):
      userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings')
      propertyid =  models.ForeignKey(Property, on_delete=models.CASCADE, related_name='propertyid_rating')
      comment=models.TextField( null=True)
-     status = models.IntegerField(
+     rate = models.IntegerField(
         choices=Rate.choices,
         default=Rate.ONE_STAR,
      )
@@ -144,7 +157,13 @@ class Ratings(models.Model):
      updated_at=models.DateTimeField(auto_now=True)
 
 class Profile(models.Model):
-     userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
-     propertyid =  models.ForeignKey(Property, on_delete=models.CASCADE, related_name='soldproperties')
+     userid = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+     company_logo=models.ImageField(upload_to='company_profiles/', blank=True, null=True)
+     company_banner=models.ImageField(upload_to='company_profiles/', blank=True, null=True)
      company_address=models.CharField(max_length=255, blank=True, null=True)
+     title=models.CharField(max_length=50, blank=True, null=True)
      description= models.TextField(max_length=500)
+     instagram=models.CharField(max_length=225, blank=True, null=True)
+     linkedin=models.CharField(max_length=225, blank=True, null=True)
+     facebook=models.CharField(max_length=225, blank=True, null=True)
+     twitter=models.CharField(max_length=225, blank=True, null=True)
