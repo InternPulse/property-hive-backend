@@ -51,7 +51,7 @@ class ForgotPasswordView(APIView):
                     [email], 
                     fail_silently=False
                 )
-                return Response({"message" : "success to snding new password link to email."}, 
+                return Response({"message" : "Password reset email sent."}, 
                                 status=status.HTTP_200_OK)
 
             except User.DoesNotExist:
@@ -79,7 +79,7 @@ class ResetPasswordView(APIView):
                 user = User.objects.get(id=uid)
 
                 if default_token_generator.check_token(user, token):
-                    new_password = serializer.validated_data['new_password']
+                    new_password = serializer.validated_data['newPassword']
                     user.set_password(new_password)
                     user.save()
                     return Response({"message" : "Password has been reset."}, status=status.HTTP_200_OK)

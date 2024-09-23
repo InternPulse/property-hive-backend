@@ -28,9 +28,9 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
 class ResetPasswordSerializer(serializers.Serializer):
     token = serializers.CharField(write_only=True, required=True)
-    new_password = serializers.CharField(min_length=7, write_only=True, required=True)
+    newPassword = serializers.CharField(min_length=7, write_only=True, required=True)
 
-    def validate_new_password(self, value):
+    def validate_newPassword(self, value):
          if not re.search(r'[a-z]', value):
            raise serializers.ValidationError("Password must contain at least one lowercase letter.")
          if not re.search(r'[0-9]', value):

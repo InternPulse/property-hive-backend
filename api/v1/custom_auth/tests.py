@@ -27,7 +27,7 @@ class ForgotPasswordViewTest(TestCase):
         """Test if the password reset link is successfully sent when a valid email is provided."""
         response = self.client.post(self.url, {'email': self.user_email}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], 'success to snding new password link to email.')
+        self.assertEqual(response.data['message'], 'Password reset email sent.')
 
         # Check if an email was sent
         self.assertEqual(len(mail.outbox), 1)
@@ -64,7 +64,7 @@ class ResetPasswordTests(TestCase):
     def test_reset_password_valid(self):
         data = {
             "token": self.signed_data,
-            "new_password": "new_strong_password123!"
+            "newPassword": "new_strong_password123!"
         }
         
         # Send a POST request with valid token and new password
@@ -82,7 +82,7 @@ class ResetPasswordTests(TestCase):
     def test_reset_password_invalid_token(self):
         data = {
             "token": "invalid_token",
-            "new_password": "new_password123!"
+            "newPassword": "new_password123!"
         }
         
         # Send a POST request with an invalid token
@@ -104,4 +104,4 @@ class ResetPasswordTests(TestCase):
         
         # Check if the response status code is 400 (Bad Request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("new_password", response.data)
+        self.assertIn("newPassword", response.data)
