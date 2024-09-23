@@ -148,5 +148,3 @@ class Profile(models.Model):
      propertyid =  models.ForeignKey(Property, on_delete=models.CASCADE, related_name='soldproperties')
      company_address=models.CharField(max_length=255, blank=True, null=True)
      description= models.TextField(max_length=500)
-
-

@@ -28,6 +28,36 @@ Usage
 - Responses are returned in JSON format with appropriate status codes.
 """
 
+"""
+User Management API
+====================
+
+This API provides endpoints for managing user accounts and profiles,
+ allowing for retrieving and updating user information, as well as registering new companies. All endpoints are secured and require authentication tokens.
+
+Classes
+-------
+1. UserViewset(viewsets.ModelViewSet)
+2. RegisterCompany(APIView)
+3. UserProfileView(APIView)
+
+Endpoints
+---------
+1. /users/ [GET, POST, PUT]
+   - User Viewset to manage user accounts (Requires authentication).
+   
+2. /profile/ [GET, PUT]
+   - Retrieves and updates the user profile (Requires authentication).
+
+3. /register/company/ [POST]
+   - Registers a new company using the provided user data.
+
+Usage
+-----
+- Token authentication is required for all endpoints except user registration.
+- Responses are returned in JSON format with appropriate status codes.
+"""
+
 from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
@@ -46,6 +76,23 @@ from rest_framework.exceptions import Throttled
 from django.core import signing
 
 class UserViewset(viewsets.ModelViewSet):
+    """
+    A ViewSet for listing or retrieving users.
+
+    Methods:
+    --------
+    - GET: Retrieves all users or a specific user by ID.
+    - POST: Creates a new user in the system.
+    - PUT: Updates a user's details.
+
+    Authentication:
+    ---------------
+    Requires token authentication for all requests.
+
+    Permissions:
+    ------------
+    - IsAuthenticated: Only authenticated users can access these endpoints.
+    """
     """
     A ViewSet for listing or retrieving users.
 
@@ -87,7 +134,28 @@ class RegisterCompany(APIView):
     Returns the registered user data upon successful registration.
 
     """
+
+    """
+    API endpoint for registering a new company.
+
+    Methods:
+    --------
+    - POST: Registers a new company with the provided user data (JSON payload).
+
+    Request Body:
+    -------------
+    - username: str
+    - email: str
+    - password: str
+
+    Response:
+    ---------
+    Returns the registered user data upon successful registration.
+
+    """
     permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
