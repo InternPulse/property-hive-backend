@@ -34,6 +34,7 @@ Methods
 
 from rest_framework import fields, serializers
 from api.v1.common.models import User, KycDocuments
+import re
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -84,6 +85,7 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
+
 class UserProfileSerializer(serializers.ModelSerializer):
     """
     Serializer for updating the user's profile, such as phone number and identification documents.
@@ -129,3 +131,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.CharField(write_only=True, required=True)
+    newPassword = serializers.CharField(min_length=7, write_only=True, required=True)
+
+    def validate_newPassword(self, value):
+         if not re.search(r'[a-z]', value):
+           raise serializers.ValidationError("Password must contain at least one lowercase letter.")
+         if not re.search(r'[0-9]', value):
+           raise serializers.ValidationError("Password must contain at least one digit.")
+         
+         return value
