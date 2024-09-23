@@ -4,6 +4,8 @@ import environ
 
 env = environ.Env()
 environ.Env.read_env()  # This reads the .env file
+import sys
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,6 +38,7 @@ INSTALLED_APPS = [
     "api.v1.common",
     "rest_framework",
     "rest_framework.authtoken",
+    'rest_framework_simplejwt',
 ]
 
 AUTH_USER_MODEL = "common.User"
@@ -58,7 +61,8 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.AnonRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '10/hour',  # Adjust as needed (10 requests per hour)
+        'anon': '8/hour',  # Adjust as needed (8 requests per hour)
+        'user' : '15/hour'
     }
 }
 
@@ -157,3 +161,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+    "ALGORITHM": "HS256",
+    "VERIFYING_KEY": None, 
+}
