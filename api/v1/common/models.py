@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import UserManager,AbstractBaseUser,PermissionsMixin
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+
 class CustomUserManagement(UserManager):
     def _create_user(self,email,password, **extra_fields):
         if not email:
@@ -103,7 +105,7 @@ class Userproperties(models.Model):
     date_purchased = models.DateTimeField(auto_now_add=True)
 
 class Transactions(models.Model):
-    userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_transactions')
+    userid = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='common_transactions')
     propertyid =  models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_transactions')
     class Status(models.TextChoices):
         PENDING = 'P', 'Pending'
