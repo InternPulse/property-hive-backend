@@ -10,7 +10,6 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core import signing
 
-
 class UserProfileTests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -62,13 +61,14 @@ class ForgotPasswordViewTest(TestCase):
         """Test if the API returns 404 when the email is not found."""
         response = self.client.post(self.url, {'email': 'nonexistent@example.com'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertEqual(response.data['message'], 'email not found.')
+        self.assertEqual(response.data['message'], 'Email not found.')
 
     def test_password_reset_request_invalid_email(self):
         """Test if the API returns 400 for an invalid email format."""
         response = self.client.post(self.url, {'email': 'invalid-email'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', response.data)
+
 
 
 

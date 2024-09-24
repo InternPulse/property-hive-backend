@@ -28,43 +28,13 @@ Usage
 - Responses are returned in JSON format with appropriate status codes.
 """
 
-"""
-User Management API
-====================
-
-This API provides endpoints for managing user accounts and profiles,
- allowing for retrieving and updating user information, as well as registering new companies. All endpoints are secured and require authentication tokens.
-
-Classes
--------
-1. UserViewset(viewsets.ModelViewSet)
-2. RegisterCompany(APIView)
-3. UserProfileView(APIView)
-
-Endpoints
----------
-1. /users/ [GET, POST, PUT]
-   - User Viewset to manage user accounts (Requires authentication).
-   
-2. /profile/ [GET, PUT]
-   - Retrieves and updates the user profile (Requires authentication).
-
-3. /register/company/ [POST]
-   - Registers a new company using the provided user data.
-
-Usage
------
-- Token authentication is required for all endpoints except user registration.
-- Responses are returned in JSON format with appropriate status codes.
-"""
-
 from django.shortcuts import render
-from rest_framework import viewsets
 from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model
 from api.v1.common.models import User
 from rest_framework.permissions import AllowAny
 from rest_framework.throttling import AnonRateThrottle
@@ -76,23 +46,6 @@ from rest_framework.exceptions import Throttled
 from django.core import signing
 
 class UserViewset(viewsets.ModelViewSet):
-    """
-    A ViewSet for listing or retrieving users.
-
-    Methods:
-    --------
-    - GET: Retrieves all users or a specific user by ID.
-    - POST: Creates a new user in the system.
-    - PUT: Updates a user's details.
-
-    Authentication:
-    ---------------
-    Requires token authentication for all requests.
-
-    Permissions:
-    ------------
-    - IsAuthenticated: Only authenticated users can access these endpoints.
-    """
     """
     A ViewSet for listing or retrieving users.
 
@@ -134,28 +87,7 @@ class RegisterCompany(APIView):
     Returns the registered user data upon successful registration.
 
     """
-
-    """
-    API endpoint for registering a new company.
-
-    Methods:
-    --------
-    - POST: Registers a new company with the provided user data (JSON payload).
-
-    Request Body:
-    -------------
-    - username: str
-    - email: str
-    - password: str
-
-    Response:
-    ---------
-    Returns the registered user data upon successful registration.
-
-    """
     permission_classes = [AllowAny]
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -244,50 +176,131 @@ class UserProfileView(APIView):
 
 
 
+
 class ForgotPasswordView(APIView):
+    """
+    API endpoint to initiate the password reset process by sending a reset email.
+
+    Methods:
+    --------
+    - POST: Sends a password reset email to the user if the email is valid.
+
+    Authentication:
+    ---------------
+    No authentication required.
+
+    Throttling:
+    -----------
+    - AnonRateThrottle: Restricts the rate of password reset requests for unauthenticated users.
+
+    POST Response:
+    --------------
+    - statusCode: 200
+    - message: Password reset email sent
+    - statusCode: 404
+    - message: Email not found
+
+    Error Handling:
+    ---------------
+    Returns 400 for invalid data with the corresponding error message.
+    """
+
     permission_classes = [AllowAny]
     throttle_classes = [AnonRateThrottle]
 
-
     def post(self, request):
+        """
+        Send a password reset email if the provided email is valid.
+
+        Request:
+        --------
+        - Body: JSON object containing the user's email.
+
+        Response:
+        ---------
+        - statusCode: 200 if email is valid and reset email is sent.
+        - statusCode: 404 if email is not found in the database.
+        """
         serializer_email = ForgotPasswordSerializer(data=request.data)
-    
+
         if serializer_email.is_valid():
-            email = serializer_email._validated_data['email']
+            email = serializer_email.validated_data['email']
             try:
                 user = User.objects.get(email=email)
                 token = default_token_generator.make_token(user)
                 uuid = urlsafe_base64_encode(force_bytes(user.pk))
 
-                signed_data = signing.dumps({'uid' : uuid, 'token' : token})
+                signed_data = signing.dumps({'uid': uuid, 'token': token})
                 send_mail(
-                    "Reset your password on property hive"
-                    ,f"Please click the link below to change your password: https://propertyhive.com/reset-password?token={signed_data}"
-                    , "phive699@gmail.com",
-                    [email], 
+                    "Reset your password on Property Hive",
+                    f"Please click the link below to change your password: https://propertyhive.com/reset-password?token={signed_data}",
+                    "phive699@gmail.com",
+                    [email],
                     fail_silently=False
                 )
-                return Response({"message" : "Password reset email sent."}, 
-                                status=status.HTTP_200_OK)
+                return Response({
+                    "message": "Password reset email sent."
+                }, status=status.HTTP_200_OK)
 
             except User.DoesNotExist:
-                return Response({"message" : "email not found."}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response( serializer_email.errors, status.HTTP_400_BAD_REQUEST)
-    
-    def throttled(self, request, wait):
-        raise Throttled(detail=f"Too many requests. Try again in {int(wait / 60)} min.")
+                return Response({
+                    "message": "Email not found."
+                }, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer_email.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def throttled(self, request, wait):
+        """
+        Handle throttling errors and provide a user-friendly message.
+        """
+        raise Throttled(detail=f"Too many requests. Try again in {int(wait / 60)} minutes.")
 
 
 class ResetPasswordView(APIView):
+    """
+    API endpoint to reset the user's password using a valid token.
+
+    Methods:
+    --------
+    - POST: Resets the user's password if the token is valid.
+
+    Authentication:
+    ---------------
+    No authentication required.
+
+    Throttling:
+    -----------
+    - AnonRateThrottle: Restricts the rate of password reset requests for unauthenticated users.
+
+    POST Response:
+    --------------
+    - statusCode: 200
+    - message: Password has been reset
+    - statusCode: 400
+    - message: Token does not match the user or invalid token
+
+    Error Handling:
+    ---------------
+    Returns 400 for invalid token or password reset errors.
+    """
+
     permission_classes = [AllowAny]
     throttle_classes = [AnonRateThrottle]
 
-
     def post(self, request):
+        """
+        Reset the user's password if the provided token is valid.
+
+        Request:
+        --------
+        - Body: JSON object containing the token and new password.
+
+        Response:
+        ---------
+        - statusCode: 200 if password reset is successful.
+        - statusCode: 400 if token is invalid or does not match the user.
+        """
         serializer = ResetPasswordSerializer(data=request.data)
-        
+
         if serializer.is_valid():
             token_data = serializer.validated_data['token']
             try:
@@ -300,10 +313,20 @@ class ResetPasswordView(APIView):
                     new_password = serializer.validated_data['newPassword']
                     user.set_password(new_password)
                     user.save()
-                    return Response({"message" : "Password has been reset."}, status=status.HTTP_200_OK)
-                else:
-                    return Response({"message" : "Token does not match the user"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({
+                        "message": "Password has been reset."
+                    }, status=status.HTTP_200_OK)
+                return Response({
+                    "message": "Token does not match the user."
+                }, status=status.HTTP_400_BAD_REQUEST)
             except:
-                return Response({"message" : "Invalid Token"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    "message": "Invalid Token."
+                }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def throttled(self, request, wait):
+        """
+        Handle throttling errors and provide a user-friendly message.
+        """
+        raise Throttled(detail=f"Too many requests. Try again in {int(wait / 60)} minutes.")

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from .models import User,Profile,Property,PropertyDocuments,PropertyImages,Soldproperties,Ratings,Soldproperties,Invoice,Transactions,KycDocuments
+from .models import User,Profile,Property,PropertyDocuments,PropertyImages,Soldproperties,Ratings,Invoice,Transactions,KycDocuments
 admin.site.register(User)
 admin.site.register(Profile)
 admin.site.register(KycDocuments)

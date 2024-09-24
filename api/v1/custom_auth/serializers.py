@@ -85,7 +85,6 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
-
 class UserProfileSerializer(serializers.ModelSerializer):
     """
     Serializer for updating the user's profile, such as phone number and identification documents.

@@ -1,9 +1,5 @@
 from pathlib import Path
 import os
-import environ
-
-env = environ.Env()
-environ.Env.read_env()  # This reads the .env file
 import sys
 from datetime import timedelta
 
@@ -53,7 +49,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    'DEFAULT_RENDERER_CLASSES': (
+        'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_THROTTLE_CLASSES': [
