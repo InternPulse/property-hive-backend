@@ -7,6 +7,6 @@ class RealEstateCompany(models.Model):
     custom_url = models.CharField(max_length=255, blank=True, null=True)
 
 class CompanyProfile(models.Model):
-    phone_number = models.OneToOneField(User, on_delete=models.CASCADE, related_name="company_phone_number")
-    company_address = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="company_address")
-    company_logo = logo = models.ImageField(upload_to='media/', verbose_name='image')
+    phone_number = models.OneToOneField(User, on_delete=models.CASCADE, related_name="company-phone-number")
+    company_address = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="company-address")
+    company_logo =  models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="company-logo")
