@@ -9,8 +9,9 @@ os.environ['SSL_CERT_FILE'] = certifi.where()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/stable/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-x76f#9!$ews_&%(v0uson^tt%rf@11oe47$i&8%_1&!ldhf=%5"
@@ -18,9 +19,11 @@ SECRET_KEY = "django-insecure-x76f#9!$ews_&%(v0uson^tt%rf@11oe47$i&8%_1&!ldhf=%5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]  # Change this for production
+ALLOWED_HOSTS = ["*"]
+
 
 # Application definition
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -34,13 +37,16 @@ INSTALLED_APPS = [
     "api.v1.common",
     "rest_framework",
     "rest_framework.authtoken",
+    'rest_framework_simplejwt',
 ]
 
-AUTH_USER_MODEL = "custom_auth.User"
+AUTH_USER_MODEL = "common.User"
 
 REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
@@ -58,6 +64,7 @@ REST_FRAMEWORK = {
         'user' : '15/hour'
     }
 }
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -89,8 +96,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "property_hive.wsgi.application"
 
+
 # Database
-# https://docs.djangoproject.com/en/stable/ref/settings/#databases
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -98,8 +107,10 @@ DATABASES = {
     }
 }
 
+
 # Password validation
-# https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -115,24 +126,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
-# https://docs.djangoproject.com/en/stable/topics/i18n/
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+
 LANGUAGE_CODE = "en-us"
+
 TIME_ZONE = "UTC"
+
 USE_I18N = True
+
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/stable/howto/static-files/
-STATIC_URL = "static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # Add static files directory if needed
 
-# Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATIC_URL = "static/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -142,10 +156,12 @@ MEDIA_URL = "/media/"
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "phive699@gmail.com"
-EMAIL_HOST_PASSWORD = "prrn dozp qeou qdts"
+EMAIL_HOST_PASSWORD = "prrndozpqeouqdts"
+
 
 
 SIMPLE_JWT = {
