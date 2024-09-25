@@ -15,7 +15,7 @@ Endpoints
 ---------
 1. /users/ [GET, POST, PUT]
    - User Viewset to manage user accounts (Requires authentication).
-   
+
 2. /profile/ [GET, PUT]
    - Retrieves and updates the user profile (Requires authentication).
 
@@ -127,7 +127,7 @@ class UserProfileView(APIView):
     ---------------
     Returns 400 for invalid data with the corresponding error message.
     """
-    
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

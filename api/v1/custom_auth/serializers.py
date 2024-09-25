@@ -146,5 +146,5 @@ class ResetPasswordSerializer(serializers.Serializer):
            raise serializers.ValidationError("Password must contain at least one lowercase letter.")
          if not re.search(r'[0-9]', value):
            raise serializers.ValidationError("Password must contain at least one digit.")
-         
+
          return value
