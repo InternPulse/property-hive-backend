@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+import sys
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +31,6 @@ INSTALLED_APPS = [
     "api.v1.common",
     "rest_framework",
     "rest_framework.authtoken",
-    "rest_framework_simplejwt",  # Ensure this is included for JWT
 ]
 
 AUTH_USER_MODEL = "custom_auth.User"
@@ -42,6 +43,17 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
+        'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '8/hour',  # Adjust as needed (8 requests per hour)
+        'user' : '15/hour'
+    }
 }
 
 MIDDLEWARE = [
@@ -119,3 +131,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"

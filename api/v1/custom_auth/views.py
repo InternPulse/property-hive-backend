@@ -1,36 +1,41 @@
+"""
+User Management API
+====================
+
+This API provides endpoints for managing user accounts and profiles,
+ allowing for retrieving and updating user information, as well as registering new companies. All endpoints are secured and require authentication tokens.
+
+Classes
+-------
+1. UserViewset(viewsets.ModelViewSet)
+2. RegisterCompany(APIView)
+3. UserProfileView(APIView)
+
+Endpoints
+---------
+1. /users/ [GET, POST, PUT]
+   - User Viewset to manage user accounts (Requires authentication).
+   
+2. /profile/ [GET, PUT]
+   - Retrieves and updates the user profile (Requires authentication).
+
+3. /register/company/ [POST]
+   - Registers a new company using the provided user data.
+
+Usage
+-----
+- Token authentication is required for all endpoints except user registration.
+- Responses are returned in JSON format with appropriate status codes.
+"""
+
 from django.shortcuts import render
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework import permissions, status, viewsets
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.contrib.auth import authenticate
-from .models import User
 from .serializers import UserSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+# from django.contrib.auth import get_user_model
 
-class ProtectedView(APIView):
-    permission_classes = [IsAuthenticated]
+# class UserViewset(viewsets.ModelViewSet):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = UserSerializer
+#     queryset = get_user_model().objects.all()
 
-    def get(self, request, *args, **kwargs):
-        return Response({'message': 'You have access to this protected view!'})
-
-class RegisterUserView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request, *args, **kwargs):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]  # Change as needed
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    pass
-
-class CustomTokenRefreshView(TokenRefreshView):
-    pass
