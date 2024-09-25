@@ -3,21 +3,17 @@ import os
 import sys
 from datetime import timedelta
 import certifi
+import dj_database_url
 
-os.environ['SSL_CERT_FILE'] = certifi.where()
+os.environ["SSL_CERT_FILE"] = certifi.where()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-x76f#9!$ews_&%(v0uson^tt%rf@11oe47$i&8%_1&!ldhf=%5"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -37,7 +33,7 @@ INSTALLED_APPS = [
     "api.v1.common",
     "rest_framework",
     "rest_framework.authtoken",
-    'rest_framework_simplejwt',
+    "rest_framework_simplejwt",
 ]
 
 AUTH_USER_MODEL = "common.User"
@@ -52,17 +48,15 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-        'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.UserRateThrottle',
-        'rest_framework.throttling.AnonRateThrottle',
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.AnonRateThrottle",
     ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '8/hour',  # Adjust as needed (8 requests per hour)
-        'user' : '15/hour'
-    }
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "8/hour",  # Adjust as needed (8 requests per hour)
+        "user": "15/hour",
+    },
 }
 
 
@@ -74,6 +68,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "property_hive.urls"
@@ -100,12 +95,7 @@ WSGI_APPLICATION = "property_hive.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
 
 
 # Password validation
@@ -154,14 +144,13 @@ MEDIA_URL = "/media/"
 
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "phive699@gmail.com"
 EMAIL_HOST_PASSWORD = "prrndozpqeouqdts"
-
 
 
 SIMPLE_JWT = {
