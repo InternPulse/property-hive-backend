@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
-from .models import RealEstateCompany, CompanyProfile
+from .models import RealEstateCompany
+from ..common.models import Profile
 from .serializers import RealEstateSerialize
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -65,8 +66,7 @@ class CompanyProfileViewSet(viewsets.ViewSet):
         #Retrieve the company profile
         user = request.user
         
-        
-        company = CompanyProfile.objects.filter(user=user).first()
+        company = Profile.objects.filter(userid=user).first()
 
         if not company:
             return Response({"message": "Company not found", "status_code": 404},
@@ -86,7 +86,7 @@ class CompanyProfileViewSet(viewsets.ViewSet):
 
     def put(self, request):
         user = request.user
-        company = CompanyProfile.objects.filter(user=user).first()
+        company = Profile.objects.filter(userid=user).first()
         serializer = CompanyProfileSerializer(company, data=request.data, partial=True)
 
         if serializer.is_valid():
@@ -101,7 +101,11 @@ class CompanyProfileViewSet(viewsets.ViewSet):
             )
         else:
             return Response(
-                {"message": "Invalid data", "errors": serializer.errors, "status_code": 400},
+                {
+                    "message": "Invalid data",
+                    "errors": serializer.errors,
+                    "status_code": 400
+                },
                 status=400,
             )
 
