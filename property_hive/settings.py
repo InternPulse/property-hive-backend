@@ -2,6 +2,9 @@ from pathlib import Path
 import os
 import sys
 from datetime import timedelta
+import certifi
+
+os.environ['SSL_CERT_FILE'] = certifi.where()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -153,10 +156,12 @@ MEDIA_URL = "/media/"
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "phive699@gmail.com"
-EMAIL_HOST_PASSWORD = "prrn dozp qeou qdts"
+EMAIL_HOST_PASSWORD = "prrndozpqeouqdts"
+
 
 
 SIMPLE_JWT = {
@@ -166,5 +171,5 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",
-    "VERIFYING_KEY": None, 
+    "VERIFYING_KEY": None,
 }

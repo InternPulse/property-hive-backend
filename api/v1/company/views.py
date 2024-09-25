@@ -2,7 +2,6 @@ from django.http import JsonResponse
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 from .models import RealEstateCompany
-from ..common.models import Profile
 from .serializers import RealEstateSerialize
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +12,7 @@ from .serializers import CompanyProfileSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-
+from api.v1.common.models import Profile
 
 class RealEstateCompanyViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -55,23 +54,24 @@ class RealEstateCompanyViewSet(viewsets.ViewSet):
             },
             status=201,
         )
-    
 
-    
-class CompanyProfileViewSet(viewsets.ViewSet):
+
+
+class CompanyProfileViewSet(APIView):
     permission_classes = [IsAuthenticated]
 
 
     def get(self, request):
         #Retrieve the company profile
         user = request.user
-        
+
+
         company = Profile.objects.filter(userid=user).first()
 
         if not company:
             return Response({"message": "Company not found", "status_code": 404},
                 status=404,)
-        
+
         serializer = CompanyProfileSerializer(company)
 
         return Response(
@@ -82,7 +82,7 @@ class CompanyProfileViewSet(viewsets.ViewSet):
             },
             status=200,
         )
-    
+
 
     def put(self, request):
         user = request.user
@@ -108,6 +108,9 @@ class CompanyProfileViewSet(viewsets.ViewSet):
                 },
                 status=400,
             )
+
+
+
 
 
 class LogoutView(APIView):
