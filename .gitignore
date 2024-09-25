@@ -3,7 +3,6 @@
 __pycache__/
 api/__pycache__/
 api/migrations/
-migrations/
 .vscode/
 *.pyc
 *.pyo
