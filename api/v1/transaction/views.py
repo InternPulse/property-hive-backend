@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
-from api.v1.common.models import Transactions
-from .serializers import TransactionSerializer
+from api.v1.common.models import Transactions,Invoice
+from .serializers import TransactionSerializer,PropertyInvoiceSerializer
+from django.shortcuts import get_object_or_404
 
 class TransactionListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -58,5 +59,23 @@ class TransactionDetailView(APIView):
 
         transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PropertyInvoiceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, invoice_id=None):
+        # Use get_object_or_404 to handle the case when invoice is not found
+        invoice = get_object_or_404(Invoice, id=invoice_id)
+
+        # Serialize the invoice
+        serializer = PropertyInvoiceSerializer(invoice)
+
+        # Return a proper Response
+        return Response({
+            "message": "Invoice retrieved successfully",
+            "status_code": 200,
+            "data": serializer.data
+        }, status=200)
+
 
 
