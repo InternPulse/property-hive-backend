@@ -1,0 +1,240 @@
+[33mcommit 1f72f7963140ec1c46cc47f2c52d04f3aa58eb96[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mget-view-transaction[m[33m)[m
+Merge: a9b9569 cc49258
+Author: BlueHatThebe <thebzennkhasi@gmail.com>
+Date:   Wed Sep 25 18:49:55 2024 +0200
+
+    Remove db.sqlite3 from version control
+
+[33mcommit cc4925849e9164d8f35aa84193a96d89c175a683[m
+Merge: 4807cba 06686e5
+Author: Eze Israel John <ezeisraeljohn@gmail.com>
+Date:   Tue Sep 24 18:40:11 2024 +0100
+
+    Merge pull request #18 from InternPulse/PRO-75/Feat/Forgot-Password
+    
+    Forgot Password endpoint & Reset Password endpoint
+
+[33mcommit 06686e57891be1a6c5c4a8706ff55bda7ce787c5[m
+Merge: d635906 4807cba
+Author: mohammedmuk <mohammedmuk20@gmail.com>
+Date:   Tue Sep 24 14:54:39 2024 +0300
+
+    Solve the conflict
+
+[33mcommit d63590666cdbef092c5dfb8a37c2a5f66ad62a5d[m
+Author: mohammedmuk <89171379+mohammedmuk@users.noreply.github.com>
+Date:   Tue Sep 24 13:15:03 2024 +0300
+
+    Update settings.py
+
+[33mcommit a9b95699afe589ad319b6b4e3750732317a407e7[m[33m ([m[1;31morigin/get-view-transaction[m[33m)[m
+Author: BlueHatThebe <thebzennkhasi@gmail.com>
+Date:   Tue Sep 24 11:07:33 2024 +0200
+
+    added login a user, get transactions
+
+[33mcommit 4807cba75d316052e516bbdab2fa01ac6d219370[m
+Merge: 532bb8f ea5aa91
+Author: abdulhamidbabawale <135306198+abdulhamidbabawale@users.noreply.github.com>
+Date:   Mon Sep 23 22:44:45 2024 +0100
+
+    Merge pull request #16 from InternPulse/models
+    
+    updated models
+
+[33mcommit ea5aa91c94322b837633702f282902e0595c7ecc[m
+Author: abdulhamidbabawale <hamidbabawale@gmail.com>
+Date:   Mon Sep 23 22:41:39 2024 +0100
+
+    updated models
+
+[33mcommit 532bb8fda755ace3b74b3d407fca7261629e3ad6[m
+Author: abdulhamidbabawale <hamidbabawale@gmail.com>
+Date:   Mon Sep 23 20:20:38 2024 +0100
+
+    Revert "Merge pull request #13 from InternPulse/PRO-75/Feat/Forgot-Password"
+    
+    This reverts commit de5264cae2b45aa5d6673ee8b8dbb37e24886934, reversing
+    changes made to 53ca0fe506bdb4257a6e0034afe3ca43cd0d7a0b.
+
+[33mcommit de5264cae2b45aa5d6673ee8b8dbb37e24886934[m
+Merge: 53ca0fe 7a8c4d4
+Author: abdulhamidbabawale <135306198+abdulhamidbabawale@users.noreply.github.com>
+Date:   Mon Sep 23 19:51:46 2024 +0100
+
+    Merge pull request #13 from InternPulse/PRO-75/Feat/Forgot-Password
+    
+    Forgot password endpoint & Reset password endpoint
+
+[33mcommit 7a8c4d421e5c39f2653fc1056b7f333623461398[m
+Merge: 0e341d1 53ca0fe
+Author: mohammedmuk <mohammedmuk20@gmail.com>
+Date:   Mon Sep 23 19:29:17 2024 +0300
+
+    Solve the conflict
+
+[33mcommit 0e341d13bee1e0ce904f8780e1dcd4314a2e18c7[m
+Author: mohammedmuk <mohammedmuk20@gmail.com>
+Date:   Mon Sep 23 19:22:51 2024 +0300
+
+    Solve the conflict
+
+[33mcommit c9b2b819490109093060e98c70341853a486211c[m
+Author: mohammedmuk <mohammedmuk20@gmail.com>
+Date:   Mon Sep 23 15:08:49 2024 +0300
+
+    Edit on newPassword attribute and forgot password reponse message
+
+[33mcommit 53ca0fe506bdb4257a6e0034afe3ca43cd0d7a0b[m
+Merge: d7d5e95 01382e3
+Author: abdulhamidbabawale <135306198+abdulhamidbabawale@users.noreply.github.com>
+Date:   Mon Sep 23 13:04:01 2024 +0100
+
+    Merge pull request #11 from InternPulse/bigO
+    
+    Big o
+
+[33mcommit 01382e33ef3a089dcc4740ee35f0c49e416e0288[m
+Author: hassanyoung1 <hhassanhakeem@gmail.com>
+Date:   Mon Sep 23 04:19:07 2024 -0700
+
+    admin ui fixed
+
+[33mcommit cceb9778522e6582942d484f8f32e444c6ce4870[m
+Author: mohammedmuk <mohammedmuk20@gmail.com>
+Date:   Sun Sep 22 23:20:37 2024 +0300
+
+    Add email configuration and environment setup for password reset
+
+[33mcommit c8105fb2b905900d20aca7ec163ee38e5572927b[m
+Author: hassanyoung1 <hhassanhakeem@gmail.com>
+Date:   Sat Sep 21 11:17:12 2024 -0700
+
+    models fixed
+
+[33mcommit 19a9c21e66d457ec33b87bfbc9150e8c82a7b26a[m
+Author: hassanyoung1 <hhassanhakeem@gmail.com>
+Date:   Sat Sep 21 11:09:33 2024 -0700
+
+    models fixed
+
+[33mcommit 6830885656beb5201d1930d6ebecce6d6bb56725[m
+Merge: db654ef d7d5e95
+Author: hassanyoung1 <hhassanhakeem@gmail.com>
+Date:   Sat Sep 21 05:38:48 2024 -0700
+
+    Update User Profile
+
+[33mcommit db654ef1eab02d05ffd6423077a30a70f13ef1e0[m
+Author: hassanyoung1 <hhassanhakeem@gmail.com>
+Date:   Sat Sep 21 01:42:15 2024 -0700
+
+    implementing userptofile update
+
+[33mcommit d7d5e9591689176fffad2004ab0da97bad680b81[m
+Merge: 1e49398 d4e0038
+Author: abdulhamidbabawale <135306198+abdulhamidbabawale@users.noreply.github.com>
+Date:   Sat Sep 21 06:39:24 2024 +0100
+
+    Merge pull request #10 from InternPulse/login
+    
+    register updates
+
+[33mcommit d4e0038f3540f04cb7c1379d88ca6573790067ca[m
+Author: abdulhamidbabawale <hamidbabawale@gmail.com>
+Date:   Sat Sep 21 06:35:20 2024 +0100
+
+    register updates
+
+[33mcommit 1e49398557924c7f0cf91175afebb02f445ff33e[m
+Merge: 41c82b6 81b3060
+Author: abdulhamidbabawale <135306198+abdulhamidbabawale@users.noreply.github.com>
+Date:   Thu Sep 19 18:09:09 2024 +0100
+
+    Merge pull request #9 from InternPulse/login
+    
+    Login and register company
+
+[33mcommit 81b30600a777060211080ea914b0ea71e23403e4[m
+Author: abdulhamidbabawale <hamidbabawale@gmail.com>
+Date:   Thu Sep 19 18:06:18 2024 +0100
+
+    no url
+
+[33mcommit cce547abf6c08c4cafaba4de0920cdf8127aaa18[m
+Author: abdulhamidbabawale <hamidbabawale@gmail.com>
+Date:   Thu Sep 19 18:02:44 2024 +0100
+
+    login and register company
+
+[33mcommit 41c82b636cf8ea0b236da76c6749c2726c72aaf3[m[33m ([m[1;31morigin/get-view-transactions[m[33m, [m[1;32mget-view-transactions[m[33m, [m[1;32mdev[m[33m)[m
+Merge: 8864270 307c901
+Author: Eze Israel John <ezeisraeljohn@gmail.com>
+Date:   Thu Sep 19 13:31:13 2024 +0100
+
+    Merge pull request #8 from InternPulse/7-fix-bug-on-generating-company-url
+    
+    Fix the Bug that is Generated when Creating Company's Url
+
+[33mcommit 307c901ebe77c7e7abec12cec167174384417bbe[m[33m ([m[1;31morigin/7-fix-bug-on-generating-company-url[m[33m)[m
+Author: ezeisraeljohn <ezeisraeljohn@gmail.com>
+Date:   Thu Sep 19 13:14:03 2024 +0100
+
+    Refactor: Update property_hive/urls.py
+
+[33mcommit 5b6d9364d3864fb348871268b7647c138ba3a4d1[m
+Author: ezeisraeljohn <ezeisraeljohn@gmail.com>
+Date:   Thu Sep 19 13:13:43 2024 +0100
+
+    Refactor: Update ALLOWED_HOSTS and REST_FRAMEWORK settings
+
+[33mcommit 629bfa0fd62a4c62102b06725d2469ab1efefd68[m
+Author: ezeisraeljohn <ezeisraeljohn@gmail.com>
+Date:   Thu Sep 19 13:13:20 2024 +0100
+
+    Refactor: Update RealEstateCompanyViewSet create method
+    
+    - Update the create method in the RealEstateCompanyViewSet to include additional functionality.
+    - Extract the user and business name from the request data.
+    - Check if the user is a company and return an error message if not.
+    - Check if a company already exists for the user and return an error message if so.
+    - Generate a custom URL based on the user's business name.
+    - Create a new RealEstateCompany object with the user and custom URL.
+    - Return a success message with the generated custom URL.
+
+[33mcommit 0f1d053364947013ceeb8a4b9e325f60bf63ed07[m
+Author: ezeisraeljohn <ezeisraeljohn@gmail.com>
+Date:   Thu Sep 19 13:13:04 2024 +0100
+
+    Refactor: Update company URL path in company/urls.py
+
+[33mcommit 5709cbaba2b9400fdefc2d3ec37567b3ca6e9fec[m
+Author: ezeisraeljohn <ezeisraeljohn@gmail.com>
+Date:   Thu Sep 19 13:12:52 2024 +0100
+
+    Refactor: Update imports and remove unused code in company serializers
+
+[33mcommit d2c7c0b9e2214bae3fb70a35d7eafd5231ebe0e9[m
+Author: ezeisraeljohn <ezeisraeljohn@gmail.com>
+Date:   Thu Sep 19 13:10:23 2024 +0100
+
+    fix: Change the path for User
+
+[33mcommit 88642704deea44b0b5d50a5246371456277f5312[m
+Merge: 587d761 8afc393
+Author: abdulhamidbabawale <135306198+abdulhamidbabawale@users.noreply.github.com>
+Date:   Thu Sep 19 08:25:35 2024 +0100
+
+    Merge pull request #6 from InternPulse/models
+    
+    company url and company address
+
+[33mcommit 8afc39351da418dc2c369f24e528d657a5a6fad2[m
+Author: abdulhamidbabawale <hamidbabawale@gmail.com>
+Date:   Thu Sep 19 08:21:37 2024 +0100
+
+    company url and company address
+
+[33mcommit 587d7614ced7d0913190911b2d590adc806cf603[m
+Merge: 2eff2ab c415645
+Author: Eze Israel John <ezeisraeljohn@gmail.com>

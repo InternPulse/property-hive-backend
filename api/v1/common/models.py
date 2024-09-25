@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import UserManager,AbstractBaseUser,PermissionsMixin
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 class CustomUserManagement(UserManager):
     def _create_user(self,email,password, **extra_fields):
