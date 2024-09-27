@@ -35,7 +35,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     email= models.EmailField(blank=True, default='', unique=True)
     fname = models.CharField(max_length=255, blank=True)
     lname = models.CharField(max_length=255, blank=True)
-    business_name = models.CharField(max_length=255, blank=True ,unique=True)
+    business_name = models.CharField(max_length=255, blank=True ,unique=True ,null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     profile_picture = models.ImageField(upload_to='user_avatars/', blank=True, null=True)
     custom_url = models.URLField(max_length=500, blank=True, null=True)
