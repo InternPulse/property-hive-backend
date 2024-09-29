@@ -38,7 +38,13 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = "common.User"
-CORS_ALLOW_ALL_ORIGINS =True
+# CORS_ALLOW_ALL_ORIGINS =True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Allow frontend running on this port
+    "https://property-hive-frontend.netlify.app"
+]
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
