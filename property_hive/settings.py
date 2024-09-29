@@ -43,7 +43,9 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Allow frontend running on this port
-    "https://property-hive-frontend.netlify.app"
+    "https://property-hive-frontend.netlify.app",
+    "https://test-g33z.vercel.app"
+
 ]
 
 REST_FRAMEWORK = {
