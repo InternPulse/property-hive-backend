@@ -29,7 +29,7 @@ Usage
 """
 
 from django.shortcuts import render
-from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
+from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer, CustomerSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -330,3 +330,67 @@ class ResetPasswordView(APIView):
         Handle throttling errors and provide a user-friendly message.
         """
         raise Throttled(detail=f"Too many requests. Try again in {int(wait / 60)} minutes.")
+
+
+class CustomerView(APIView):
+    """
+    API endpoint to create a new customer.
+
+    Methods:
+    --------
+    - POST: Creates a new customer using the provided data.
+
+    Authentication:
+    ---------------
+    No authentication is required for this endpoint (AllowAny).
+
+    Permissions:
+    ------------
+    - AllowAny: Anyone can access this endpoint.
+
+    POST Response:
+    --------------
+    - statusCode: 201
+    - message: Customer created successfully
+    - data: Contains the newly created customer's data (username, email, etc.)
+
+    Error Handling:
+    ---------------
+    - Returns 400 for invalid data with a message.
+    """
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        """
+        Create a new customer.
+
+        Request:
+        --------
+        - Body: JSON object containing customer details (e.g., fname, lname, email, password).
+
+        Response:
+        ---------
+        Returns the created customer's data along with a status message.
+        """
+        serializer = CustomerSerializer(data=request.data)
+
+        if serializer.is_valid():
+            try:
+                user = User.objects.create(**{key: value for key, value in serializer.validated_data.items()})
+                password = serializer.validated_data['password']
+                user.set_password(password)
+                user.save()
+                return Response({
+                    "message": "Customer created successfully",
+                    "data": serializer.data
+                }, status=status.HTTP_201_CREATED)
+            except Exception:
+                return Response({
+                    "message": "Invalid data"
+                }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                "message": "Invalid data",
+                "errors": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
