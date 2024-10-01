@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import UserManager,AbstractBaseUser,PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from datetime import timedelta
+
 class CustomUserManagement(UserManager):
     def _create_user(self,email,password, **extra_fields):
         if not email:
@@ -47,6 +50,9 @@ class User(AbstractBaseUser,PermissionsMixin):
     date_joined= models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(blank=True,null=True)
     updated_at= models.DateTimeField(auto_now=True)
+    email_verification_code = models.CharField(max_length=5, blank=True, null=True)
+    email_verification_expiry = models.DateTimeField(blank=True, null=True)
+
 
     objects = CustomUserManagement()
     USERNAME_FIELD = 'email'
@@ -55,6 +61,12 @@ class User(AbstractBaseUser,PermissionsMixin):
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+    def generate_verification_code(self):
+        import random
+        self.email_verification_code = str(random.randint(10000, 99999))
+        self.email_verification_expiry = timezone.now() + timedelta(minutes=10)
+        self.save()
 
 class KycDocuments(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='kyc_documents')

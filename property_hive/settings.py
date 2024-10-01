@@ -4,6 +4,10 @@ import sys
 from datetime import timedelta
 import certifi
 import dj_database_url
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
@@ -106,7 +110,14 @@ WSGI_APPLICATION = "property_hive.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
+#DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"))}
+# sglite database settings
+DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
+ }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

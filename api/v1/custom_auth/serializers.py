@@ -167,3 +167,7 @@ class CustomerSerializer(serializers.Serializer):
            raise serializers.ValidationError("Password must contain at least one digit.")
 
          return value
+
+class EmailVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=5)
