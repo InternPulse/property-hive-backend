@@ -6,4 +6,4 @@ api/migrations/
 .vscode/
 *.pyc
 *.pyo
-settings.py
+./settings.py
