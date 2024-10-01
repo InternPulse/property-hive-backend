@@ -32,10 +32,11 @@ class CustomUserManagement(UserManager):
 
 
 class User(AbstractBaseUser,PermissionsMixin):
+    id = models.AutoField(primary_key=True)
     email= models.EmailField(blank=True, default='', unique=True)
     fname = models.CharField(max_length=255, blank=True)
     lname = models.CharField(max_length=255, blank=True)
-    business_name = models.CharField(max_length=255, blank=True ,unique=True)
+    business_name = models.CharField(max_length=255, blank=True ,unique=True ,null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     profile_picture = models.ImageField(upload_to='user_avatars/', blank=True, null=True)
     custom_url = models.URLField(max_length=500, blank=True, null=True)
@@ -71,14 +72,22 @@ class Property(models.Model):
     state=models.CharField(max_length=255)
     city=models.CharField(max_length=255)
     address=models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    description = models.TextField()
     squaremeters=models.CharField(max_length=255)
     property_type=models.CharField(max_length=255)
+    number_of_bathrooms=models.IntegerField(null=True,blank=True)
+    number_of_bedrooms=models.IntegerField(null=True,blank=True)
+    installment_duration=models.CharField(max_length=255)
+    payment_frequency=models.CharField(max_length=255)
+    down_payment = models.TextField()
+    installment_payment_price = models.IntegerField()
+    duration = models.TextField()
     price =models.IntegerField(null=False, blank=True)
     is_sold = models.BooleanField(default=False)
     date_sold = models.DateTimeField(null=True, blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
+    keywords = models.TextField(blank=True, null=True)
 
 class PropertyImages(models.Model):
      propertyid = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_images')

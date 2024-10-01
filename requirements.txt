@@ -1,8 +1,10 @@
 asgiref==3.8.1
 black==24.8.0
+certifi==2024.8.30
 cfgv==3.4.0
 click==8.1.7
 distlib==0.3.8
+dj-database-url==2.2.0
 Django==5.1.1
 django-cors-headers==4.4.0
 django-debug-toolbar==4.4.6
@@ -29,8 +31,10 @@ psycopg2-binary==2.9.9
 PyJWT==2.9.0
 pytest==8.3.3
 pytest-django==4.9.0
+python-dotenv==1.0.1
 PyYAML==6.0.2
 sqlparse==0.5.1
 tomli==2.0.1
 typing_extensions==4.12.2
 virtualenv==20.26.4
+whitenoise==6.7.0

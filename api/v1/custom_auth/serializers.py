@@ -1,3 +1,4 @@
+
 """
 User and UserProfile Serializers
 ================================
@@ -142,6 +143,24 @@ class ResetPasswordSerializer(serializers.Serializer):
     newPassword = serializers.CharField(min_length=7, write_only=True, required=True)
 
     def validate_newPassword(self, value):
+         if not re.search(r'[a-z]', value):
+           raise serializers.ValidationError("Password must contain at least one lowercase letter.")
+         if not re.search(r'[0-9]', value):
+           raise serializers.ValidationError("Password must contain at least one digit.")
+
+         return value
+
+
+
+class CustomerSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    fname = serializers.CharField(max_length=150, required=True)
+    lname = serializers.CharField(max_length=150, required=True)
+    password = serializers.CharField(write_only=True)
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
+    phone_number = serializers.CharField(max_length=20, required=False, allow_blank=True)
+
+    def validate_password(self, value):
          if not re.search(r'[a-z]', value):
            raise serializers.ValidationError("Password must contain at least one lowercase letter.")
          if not re.search(r'[0-9]', value):
