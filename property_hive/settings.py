@@ -4,6 +4,10 @@ import sys
 from datetime import timedelta
 import certifi
 import dj_database_url
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
