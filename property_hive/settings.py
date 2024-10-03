@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
     "corsheaders",
+    "django.contrib.postgres",
 ]
 
 AUTH_USER_MODEL = "common.User"

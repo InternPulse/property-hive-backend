@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.postgres.fields import ArrayField
 
 class CustomUserManagement(UserManager):
     def _create_user(self,email,password, **extra_fields):
@@ -50,7 +51,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     date_joined= models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(blank=True,null=True)
     updated_at= models.DateTimeField(auto_now=True)
-    email_verification_code = models.CharField(max_length=5, blank=True, null=True)
+    email_verification_code= models.CharField(max_length=5, blank=True, null=True)
     email_verification_expiry = models.DateTimeField(blank=True, null=True)
 
 
@@ -93,13 +94,12 @@ class Property(models.Model):
     payment_frequency=models.CharField(max_length=255)
     down_payment = models.TextField()
     installment_payment_price = models.IntegerField()
-    duration = models.TextField()
+    keywords = ArrayField(models.CharField(max_length=200), blank=True, default=list)
     price =models.IntegerField(null=False, blank=True)
     is_sold = models.BooleanField(default=False)
     date_sold = models.DateTimeField(null=True, blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
-    keywords = models.TextField(blank=True, null=True)
 
 class PropertyImages(models.Model):
      propertyid = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_images')
