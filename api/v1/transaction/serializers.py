@@ -16,3 +16,7 @@ class  PropertyInvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model=Invoice
         fields = ['transactionid','payment_status','payment_method','note','issue_date']
+
+
+
+

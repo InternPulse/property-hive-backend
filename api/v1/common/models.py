@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import UserManager,AbstractBaseUser,PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+
 class CustomUserManagement(UserManager):
     def _create_user(self,email,password, **extra_fields):
         if not email:
@@ -55,6 +59,12 @@ class User(AbstractBaseUser,PermissionsMixin):
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+    @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+    def create_company_profile(sender, instance, created, **kwargs):
+        # Check if the user is a company user and was just created
+        if created and instance.is_company:
+            Profile.objects.create(id=instance)
 
 class KycDocuments(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='kyc_documents')
@@ -129,7 +139,8 @@ class Transactions(models.Model):
     propertyid =  models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_transactions')
     class Status(models.TextChoices):
         PENDING = 'P', 'Pending'
-        SUCCESS = 'A', 'Success'
+        CREDIT_SUCCESS = 'C', 'Credit Success',
+        DEBIT_SUCCESS = 'D', 'Debit Success',
         FAILED = 'F', 'Failed'
     status = models.CharField(
         max_length=1,
