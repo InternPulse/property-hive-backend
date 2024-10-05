@@ -71,6 +71,11 @@ class CompanyProfileViewSet(APIView):
         if not company:
             return Response({"message": "Company not found", "status_code": 404},
                 status=404,)
+        
+        if request.user not in company.viewed_by.all():
+            company.views += 1
+            company.viewed_by.add(request.user)
+            company.save()
 
         serializer = CompanyProfileSerializer(company)
 

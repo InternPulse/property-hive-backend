@@ -42,9 +42,10 @@ class CompanyProfileSerializer(serializers.ModelSerializer):
     facebook = serializers.CharField()
     twitter = serializers.CharField()
     properties = PropertySerializer(many=True, read_only=True, source='userid.properties')  # Adjusted source
+    views = serializers.IntegerField()
 
     class Meta:
         model = Profile  # Ensure this is the correct model
         fields = ['phone_number', 'company_address', 'company_logo', 'company_banner',
                   'title', 'description', 'instagram', 'linkedin', 'facebook',
-                  'twitter', 'properties']
+                  'twitter', 'properties','views']
