@@ -189,7 +189,6 @@ class Profile(models.Model):
      linkedin=models.CharField(max_length=225, blank=True, null=True)
      facebook=models.CharField(max_length=225, blank=True, null=True)
      twitter=models.CharField(max_length=225, blank=True, null=True)
-    #  views=models.PositiveIntegerField(default=0)
 
 class CompanyView(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)

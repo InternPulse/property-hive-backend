@@ -149,9 +149,10 @@ class LogoutView(APIView):
 class DashBoardView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, profile_id):
+    def get(self, request):
+        user = request.user
         try:
-            company = Profile.objects.get(id=profile_id)
+            company = Profile.objects.get(userid=user)
 
         except Profile.DoesNotExist:
             return Response({"error": "Company not found"}, status=404)

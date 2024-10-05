@@ -12,7 +12,7 @@ router.register(r"companies/generate-url", RealEstateCompanyViewSet, basename="c
 urlpatterns = [
     path("", include(router.urls)),
     path('company-profile/', CompanyProfileViewSet.as_view(), name='view-update-profile'),
-    path('dashboard/<int:profile_id>/',DashBoardView.as_view(), name='viewtest'),
+    path('dashboard/',DashBoardView.as_view(), name='dashboard'),
     path('log-out', LogoutView.as_view(), name='logout'),
 
 

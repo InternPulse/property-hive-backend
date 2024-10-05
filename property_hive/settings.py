@@ -15,8 +15,7 @@ os.environ["SSL_CERT_FILE"] = certifi.where()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# SECRET_KEY = os.getenv("SECRET_KEY")
-SECRET_KEY = '72ea334741b281c21a1f3c1924501b42'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG", "True")
 
@@ -24,7 +23,7 @@ ALLOWED_HOSTS = ["*"]
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://api.propertyhive.com.ng',  
+    'https://api.propertyhive.com.ng',
 ]
 # Application definition
 
@@ -122,15 +121,8 @@ WSGI_APPLICATION = "property_hive.wsgi.application"
 #         'NAME': BASE_DIR / 'db.sqlite3',  # By default, Django uses this name.
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'testdb',
-        'PASSWORD': 'guessguess',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+DATABASES = {"default": dj_database_url.parse('postgres://avnadmin:AVNS_IKeSx4qz_3OCDobVXEu@propertyhive-internpulse-cd82.g.aivencloud.com:20245/defaultdb?sslmode=require')}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
