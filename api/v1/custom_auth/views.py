@@ -29,7 +29,7 @@ Usage
 """
 
 from django.shortcuts import render
-from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer, CustomerSerializer
+from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer, CustomerSerializer, EmailVerificationSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -44,6 +44,8 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.exceptions import Throttled
 from django.core import signing
+from django.utils import timezone
+
 
 class UserViewset(viewsets.ModelViewSet):
     """
@@ -88,12 +90,21 @@ class RegisterCompany(APIView):
 
     """
     permission_classes = [AllowAny]
+    
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        user = serializer.save(is_active=False)  # Set is_active to False
+        user.generate_verification_code()
+        send_mail(
+            'Your Verification Code',
+            f'Your verification code is {user.email_verification_code}',
+            'from@example.com',
+            [user.email],
+            fail_silently=False,
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+    
 class UserProfileView(APIView):
     """
     API endpoint to retrieve or update the authenticated user's profile.
@@ -358,29 +369,21 @@ class CustomerView(APIView):
     ---------------
     - Returns 400 for invalid data with a message.
     """
-
     permission_classes = [AllowAny]
 
     def post(self, request):
-        """
-        Create a new customer.
-
-        Request:
-        --------
-        - Body: JSON object containing customer details (e.g., fname, lname, email, password).
-
-        Response:
-        ---------
-        Returns the created customer's data along with a status message.
-        """
         serializer = CustomerSerializer(data=request.data)
-
         if serializer.is_valid():
             try:
-                user = User.objects.create(**{key: value for key, value in serializer.validated_data.items()})
-                password = serializer.validated_data['password']
-                user.set_password(password)
-                user.save()
+                user = serializer.save(is_active=False)  # Set is_active to False
+                user.generate_verification_code()
+                send_mail(
+                    'Your Verification Code',
+                    f'Your verification code is {user.email_verification_code}',
+                    'from@example.com',
+                    [user.email],
+                    fail_silently=False,
+                )
                 return Response({
                     "message": "Customer created successfully",
                     "data": serializer.data
@@ -394,3 +397,47 @@ class CustomerView(APIView):
                 "message": "Invalid data",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
+        
+class SendVerificationEmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            user.generate_verification_code()
+            send_mail(
+                'Your Verification Code',
+                f'Your verification code is {user.email_verification_code}',
+                'from@example.com',
+                [email],
+                fail_silently=False,
+            )
+            return Response({'message': 'Verification code sent'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class VerifyEmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = EmailVerificationSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            code = serializer.validated_data['code']
+            try:
+                user = User.objects.get(email=email)
+                if user.is_active:
+                    return Response({'message': 'Email is already verified'}, status=status.HTTP_400_BAD_REQUEST)
+                if user.email_verification_code == code and timezone.now() < user.email_verification_expiry:
+                    user.email_verification_code = None
+                    user.email_verification_expiry = None
+                    user.is_active = True
+                    user.save()
+                    return Response({'message': 'Email verified successfully'}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
+            except User.DoesNotExist:
+                return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

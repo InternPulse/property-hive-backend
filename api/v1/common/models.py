@@ -5,6 +5,9 @@ from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
+from django.contrib.postgres.fields import ArrayField
 
 class CustomUserManagement(UserManager):
     def _create_user(self,email,password, **extra_fields):
@@ -51,6 +54,9 @@ class User(AbstractBaseUser,PermissionsMixin):
     date_joined= models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(blank=True,null=True)
     updated_at= models.DateTimeField(auto_now=True)
+    email_verification_code= models.CharField(max_length=5, blank=True, null=True)
+    email_verification_expiry = models.DateTimeField(blank=True, null=True)
+
 
     objects = CustomUserManagement()
     USERNAME_FIELD = 'email'
@@ -65,6 +71,11 @@ class User(AbstractBaseUser,PermissionsMixin):
         # Check if the user is a company user and was just created
         if created and instance.is_company:
             Profile.objects.create(id=instance)
+    def generate_verification_code(self):
+        import random
+        self.email_verification_code = str(random.randint(10000, 99999))
+        self.email_verification_expiry = timezone.now() + timedelta(minutes=10)
+        self.save()
 
 class KycDocuments(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='kyc_documents')
@@ -91,13 +102,12 @@ class Property(models.Model):
     payment_frequency=models.CharField(max_length=255)
     down_payment = models.TextField()
     installment_payment_price = models.IntegerField()
-    duration = models.TextField()
+    keywords = ArrayField(models.CharField(max_length=200), blank=True, default=list)
     price =models.IntegerField(null=False, blank=True)
     is_sold = models.BooleanField(default=False)
     date_sold = models.DateTimeField(null=True, blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
-    keywords = models.TextField(blank=True, null=True)
 
 class PropertyImages(models.Model):
      propertyid = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_images')

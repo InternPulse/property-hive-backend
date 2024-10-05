@@ -4,6 +4,10 @@ import sys
 from datetime import timedelta
 import certifi
 import dj_database_url
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
     "corsheaders",
+    "django.contrib.postgres",
 ]
 
 AUTH_USER_MODEL = "common.User"
