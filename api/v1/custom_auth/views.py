@@ -244,7 +244,7 @@ class ForgotPasswordView(APIView):
                 signed_data = signing.dumps({'uid': uuid, 'token': token})
                 send_mail(
                     "Reset your password on Property Hive",
-                    f"Please click the link below to change your password: https://propertyhive.com/reset-password?token={signed_data}",
+                    f"Please click the link below to change your password: https://property-hive-frontend.netlify.app/reset-password?token={signed_data}",
                     "phive699@gmail.com",
                     [email],
                     fail_silently=False
