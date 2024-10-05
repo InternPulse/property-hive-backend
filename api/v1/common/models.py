@@ -97,6 +97,7 @@ class Property(models.Model):
     keywords = ArrayField(models.CharField(max_length=200), blank=True, default=list)
     price =models.IntegerField(null=False, blank=True)
     is_sold = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     date_sold = models.DateTimeField(null=True, blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
@@ -188,3 +189,9 @@ class Profile(models.Model):
      linkedin=models.CharField(max_length=225, blank=True, null=True)
      facebook=models.CharField(max_length=225, blank=True, null=True)
      twitter=models.CharField(max_length=225, blank=True, null=True)
+    #  views=models.PositiveIntegerField(default=0)
+
+class CompanyView(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    viewed_on = models.DateField(default=timezone.now)
+    views = models.IntegerField(default=1)

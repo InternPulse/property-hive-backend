@@ -15,7 +15,8 @@ os.environ["SSL_CERT_FILE"] = certifi.where()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+# SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = '72ea334741b281c21a1f3c1924501b42'
 
 DEBUG = os.getenv("DEBUG", "True")
 
@@ -111,7 +112,22 @@ WSGI_APPLICATION = "property_hive.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
+# DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',  # By default, Django uses this name.
+#     }
+# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'testdb',
+        'PASSWORD': 'guessguess',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
