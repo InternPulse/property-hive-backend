@@ -29,7 +29,7 @@ Usage
 """
 
 from django.shortcuts import render
-from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer, CustomerSerializer, EmailVerificationSerializer
+from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer, CustomerSerializer, EmailVerificationSerializer, SendVerificationEmailSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -244,7 +244,7 @@ class ForgotPasswordView(APIView):
                 signed_data = signing.dumps({'uid': uuid, 'token': token})
                 send_mail(
                     "Reset your password on Property Hive",
-                    f"Please click the link below to change your password: https://propertyhive.com/reset-password?token={signed_data}",
+                    f"Please click the link below to change your password: https://property-hive-frontend.netlify.app/reset-password?token={signed_data}",
                     "phive699@gmail.com",
                     [email],
                     fail_silently=False
@@ -374,48 +374,58 @@ class CustomerView(APIView):
     def post(self, request):
         serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                user = serializer.save(is_active=False)  # Set is_active to False
-                user.generate_verification_code()
-                send_mail(
-                    'Your Verification Code',
-                    f'Your verification code is {user.email_verification_code}',
-                    'from@example.com',
-                    [user.email],
-                    fail_silently=False,
-                )
-                return Response({
-                    "message": "Customer created successfully",
-                    "data": serializer.data
-                }, status=status.HTTP_201_CREATED)
-            except Exception:
-                return Response({
-                    "message": "Invalid data"
-                }, status=status.HTTP_400_BAD_REQUEST)
+            email = User.objects.filter(email=request.data.get('email'))
+
+            if email.exists():
+                return Response({"email" : "This email already exists."})
+
+            user = User.objects.create(**{key: value for key, value in serializer.validated_data.items()})
+            password = serializer.validated_data['password']
+            user.set_password(password)
+            user.is_active = False
+            user.save()
+            user.generate_verification_code()
+            send_mail(
+                'Your Verification Code',
+                f'Your verification code is {user.email_verification_code}',
+                'phive699@gmail.com',
+                [user.email],
+                fail_silently=False,
+            )
+            return Response({
+                "message": "Customer created successfully",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+
         else:
             return Response({
-                "message": "Invalid data",
-                "errors": serializer.errors
+               "errors" : serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
         
 class SendVerificationEmailView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        email = request.data.get('email')
-        try:
-            user = User.objects.get(email=email)
-            user.generate_verification_code()
-            send_mail(
-                'Your Verification Code',
-                f'Your verification code is {user.email_verification_code}',
-                'from@example.com',
-                [email],
-                fail_silently=False,
-            )
-            return Response({'message': 'Verification code sent'}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = SendVerificationEmailSerializer(data=request.data)
+
+        if serializer.is_valid():
+            email = request.data.get('email')
+
+            if User.objects.filter(email=email).exists():
+                user = User.objects.get(email=email)
+                user.generate_verification_code()
+                send_mail(
+                   'Your Verification Code',
+                   f'Your verification code is {user.email_verification_code}',
+                   'phive699@gmail.com',
+                   [email],
+                   fail_silently=False,
+                )
+                return Response({'message': 'Verification code sent'}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message" : "User not found"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"message" : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class VerifyEmailView(APIView):
