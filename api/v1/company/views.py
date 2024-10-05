@@ -12,7 +12,14 @@ from .serializers import CompanyProfileSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from api.v1.common.models import Profile
+from api.v1.common.models import Profile,CompanyView,Property
+# import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+import io
+import base64
+from django.db.models import Count
+from django.utils import timezone
+from django.db.models import Sum
 
 class RealEstateCompanyViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -72,6 +79,13 @@ class CompanyProfileViewSet(APIView):
             return Response({"message": "Company not found", "status_code": 404},
                 status=404,)
 
+        # company.views += 1
+        # company.save()
+        today = timezone.now().date()
+        company_view, created = CompanyView.objects.get_or_create(profile=company, viewed_on=today)
+        company_view.views += 1
+        company_view.save()
+
         serializer = CompanyProfileSerializer(company)
 
         return Response(
@@ -126,3 +140,44 @@ class LogoutView(APIView):
                 "statusCode": 400,
                 "message": "Token does not exist"
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+class DashBoardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        try:
+            company = Profile.objects.get(userid=user)
+
+        except Profile.DoesNotExist:
+            return Response({"error": "Company not found"}, status=404)
+
+
+        # Fetch views for the past 7 days
+        today = timezone.now().date()
+        last_week = today - timedelta(days=7)
+
+        views_per_day = (
+            CompanyView.objects.filter(profile=company, viewed_on__gte=last_week)
+            .values('viewed_on')
+            .annotate(total_views=Sum('views'))
+        )
+        seller = company.userid
+        # Fetch total listings, active listings, and sold properties
+        total_listings = Property.objects.filter(sellerid=seller).count()  # All listings by this company
+        active_listings = Property.objects.filter(sellerid=seller, is_sold=False).count()  # Active listings
+        sold_properties = Property.objects.filter(sellerid=seller, is_sold=True).count()  # Sold properties
+
+        # Return the chart data along with property stats
+        return Response({
+            "timestamp": [view['viewed_on'] for view in views_per_day],
+            "profile_views": [view['total_views'] for view in views_per_day],
+            "total_listings": total_listings,
+            "active_listings": active_listings,
+            "sold_properties": sold_properties
+        })
