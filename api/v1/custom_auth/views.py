@@ -374,28 +374,32 @@ class CustomerView(APIView):
     def post(self, request):
         serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                user = serializer.save(is_active=False)  # Set is_active to False
-                user.generate_verification_code()
-                send_mail(
-                    'Your Verification Code',
-                    f'Your verification code is {user.email_verification_code}',
-                    'from@example.com',
-                    [user.email],
-                    fail_silently=False,
-                )
-                return Response({
-                    "message": "Customer created successfully",
-                    "data": serializer.data
-                }, status=status.HTTP_201_CREATED)
-            except Exception:
-                return Response({
-                    "message": "Invalid data"
-                }, status=status.HTTP_400_BAD_REQUEST)
+            email = User.objects.filter(email=request.data.get('email'))
+
+            if email.exists():
+                return Response({"email" : "This email already exists."})
+
+            user = User.objects.create(**{key: value for key, value in serializer.validated_data.items()})
+            password = serializer.validated_data['password']
+            user.set_password(password)
+            user.is_active = False
+            user.save()
+            user.generate_verification_code()
+            send_mail(
+                'Your Verification Code',
+                f'Your verification code is {user.email_verification_code}',
+                'phive699@gmail.com',
+                [user.email],
+                fail_silently=False,
+            )
+            return Response({
+                "message": "Customer created successfully",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+
         else:
             return Response({
-                "message": "Invalid data",
-                "errors": serializer.errors
+               "errors" : serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
         
 class SendVerificationEmailView(APIView):
