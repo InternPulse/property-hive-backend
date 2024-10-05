@@ -22,9 +22,7 @@ DEBUG = os.getenv("DEBUG", "True")
 ALLOWED_HOSTS = ["*"]
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://api.propertyhive.com.ng',
-]
+
 # Application definition
 
 INSTALLED_APPS = [
