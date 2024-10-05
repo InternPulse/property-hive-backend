@@ -114,14 +114,13 @@ WSGI_APPLICATION = "property_hive.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
+DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',  # By default, Django uses this name.
 #     }
 # }
-DATABASES = {"default": dj_database_url.parse('postgres://avnadmin:AVNS_IKeSx4qz_3OCDobVXEu@propertyhive-internpulse-cd82.g.aivencloud.com:20245/defaultdb?sslmode=require')}
 
 
 # Password validation
