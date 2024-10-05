@@ -171,3 +171,7 @@ class CustomerSerializer(serializers.Serializer):
 class EmailVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     code = serializers.CharField(max_length=5)
+
+
+class SendVerificationEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
