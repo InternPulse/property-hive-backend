@@ -29,7 +29,7 @@ Usage
 """
 
 from django.shortcuts import render
-from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer, CustomerSerializer, EmailVerificationSerializer, SendVerificationEmailSerializer
+from .serializers import UserSerializer, UserProfileSerializer, ForgotPasswordSerializer, ResetPasswordSerializer, CustomerSerializer, EmailVerificationSerializer, SendVerificationEmailSerializer, CustomerLoginSerializer, CompanyLoginSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -45,6 +45,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.exceptions import Throttled
 from django.core import signing
 from django.utils import timezone
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class UserViewset(viewsets.ModelViewSet):
@@ -452,3 +453,11 @@ class VerifyEmailView(APIView):
             except User.DoesNotExist:
                 return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomerLoginView(TokenObtainPairView):
+    serializer_class = CustomerLoginSerializer
+
+
+class CompanyLoginView(TokenObtainPairView):
+    serializer_class = CompanyLoginSerializer
