@@ -35,7 +35,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
-from api.v1.common.models import User
+from api.v1.common.models import User,Profile
 from rest_framework.permissions import AllowAny
 from rest_framework.throttling import AnonRateThrottle
 from django.core.mail import send_mail
@@ -90,11 +90,11 @@ class RegisterCompany(APIView):
 
     """
     permission_classes = [AllowAny]
-    
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save(is_active=False)  # Set is_active to False
+        user = serializer.save(is_active=False)
         user.generate_verification_code()
         send_mail(
             'Your Verification Code',
@@ -103,8 +103,9 @@ class RegisterCompany(APIView):
             [user.email],
             fail_silently=False,
         )
+        Profile.objects.create(userid=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
 class UserProfileView(APIView):
     """
     API endpoint to retrieve or update the authenticated user's profile.
@@ -401,7 +402,7 @@ class CustomerView(APIView):
             return Response({
                "errors" : serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
-        
+
 class SendVerificationEmailView(APIView):
     permission_classes = [AllowAny]
 
