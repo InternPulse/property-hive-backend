@@ -35,6 +35,7 @@ Methods
 
 from rest_framework import fields, serializers
 from api.v1.common.models import User, KycDocuments
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 import re
 
 class UserSerializer(serializers.ModelSerializer):
@@ -175,3 +176,38 @@ class EmailVerificationSerializer(serializers.Serializer):
 
 class SendVerificationEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+
+
+class CustomerLoginSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        if User.objects.filter(email=attrs['email']).exists():
+            user = User.objects.get(email=attrs['email'])
+
+            if not user.check_password(attrs['password']):
+                raise serializers.ValidationError("Invalid password")
+            
+            if user.is_company == True:
+                raise serializers.ValidationError('Not allowed to login as a customer')
+
+        else:
+            raise serializers.ValidationError('User not found')
+        
+        return super().validate(attrs)
+    
+
+class CompanyLoginSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        if User.objects.filter(email=attrs['email']).exists():
+             user = User.objects.get(email=attrs['email'])
+
+             if not user.check_password(attrs['password']):
+                raise serializers.ValidationError("Invalid password")
+
+             if user.is_company == False:
+                 raise serializers.ValidationError('Not allowed to login as a company')
+
+        else:
+            serializers.ValidationError('User not found')
+
+        return super().validate(attrs)
