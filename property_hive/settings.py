@@ -55,7 +55,8 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Allow frontend running on this port
     "https://property-hive-frontend.netlify.app",
-    "https://test-g33z.vercel.app"
+    "https://test-g33z.vercel.app",
+    "https://www.propertyhive.com.ng"
 
 ]
 
@@ -75,8 +76,8 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "8/hour",  # Adjust as needed (8 requests per hour)
-        "user": "15/hour",
+        "anon": "100000/hour",  # Adjust as needed (8 requests per hour)
+        "user": "10000/hour",
     },
 }
 
