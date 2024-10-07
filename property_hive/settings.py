@@ -22,7 +22,9 @@ DEBUG = os.getenv("DEBUG", "True")
 
 ALLOWED_HOSTS = ["*"]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://api.propertyhive.com.ng',
+]
 
 # Application definition
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
+    'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
     "django.contrib.postgres",
 ]

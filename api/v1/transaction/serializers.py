@@ -18,7 +18,6 @@ class PropertyInvoiceSerializer(serializers.ModelSerializer):
         fields = ['transactionid','payment_status','payment_method','note','issue_date']
 
 
-
 class EarningDetailsSerializer(serializers.Serializer):
     total_earnings = serializers.DecimalField(max_digits=10, decimal_places=2)
     available_earnings = serializers.DecimalField(max_digits=10, decimal_places=2)

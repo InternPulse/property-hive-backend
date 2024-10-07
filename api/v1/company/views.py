@@ -13,6 +13,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from api.v1.common.models import Profile,CompanyView,Property
+from rest_framework_simplejwt.tokens import RefreshToken
 # import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import io
@@ -128,17 +129,26 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            # Get the token associated with the user
-            token = Token.objects.get(user=request.user)
-            token.delete()  # Delete the token to log the user out
+            
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                return Response({
+                    "statusCode": 400,
+                    "message": "Refresh token is required"
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
             return Response({
                 "statusCode": 200,
                 "message": "Logged out successfully"
             }, status=status.HTTP_200_OK)
-        except Token.DoesNotExist:
+        except Exception as e:
             return Response({
                 "statusCode": 400,
-                "message": "Token does not exist"
+                "message": str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
