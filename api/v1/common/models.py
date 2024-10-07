@@ -94,7 +94,7 @@ class Property(models.Model):
     payment_frequency=models.CharField(max_length=255)
     down_payment = models.TextField()
     installment_payment_price = models.IntegerField()
-    keywords = models.CharField(max_length=1000, blank=True)
+    keywords = ArrayField(models.CharField(max_length=200), blank=True, default=list)
     price =models.IntegerField(null=False, blank=True)
     is_sold = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
