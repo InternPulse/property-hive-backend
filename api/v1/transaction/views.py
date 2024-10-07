@@ -86,12 +86,13 @@ class EarningDetailsView(APIView):
         user = request.user.id
         #total
         total_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.CREDIT_SUCCESS).aggregate(total=Sum('total_amount'))['total'] or 0
+        #withdrawn
+        withdrawn_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.DEBIT_SUCCESS).aggregate(total=Sum('total_amount'))['total'] or 0
         #available
         available_earnings = total_earnings - withdrawn_earnings
         #pending
         pending_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.PENDING, payment_method='debit').aggregate(total=Sum('total_amount'))['total'] or 0
-        #withdrawn
-        withdrawn_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.DEBIT_SUCCESS).aggregate(total=Sum('total_amount'))['total'] or 0
+        
 
 
         earnings_data = {
