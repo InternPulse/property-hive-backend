@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from api.v1.common.models import Transactions,Invoice
-from .serializers import TransactionSerializer,PropertyInvoiceSerializer
+from .serializers import TransactionSerializer,PropertyInvoiceSerializer, EarningDetailsSerializer
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 
@@ -86,12 +86,13 @@ class EarningDetailsView(APIView):
         user = request.user.id
         #total
         total_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.CREDIT_SUCCESS).aggregate(total=Sum('total_amount'))['total'] or 0
+        #withdrawn
+        withdrawn_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.DEBIT_SUCCESS).aggregate(total=Sum('total_amount'))['total'] or 0
         #available
         available_earnings = total_earnings - withdrawn_earnings
         #pending
         pending_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.PENDING, payment_method='debit').aggregate(total=Sum('total_amount'))['total'] or 0
-        #withdrawn
-        withdrawn_earnings = Transactions.objects.filter(userid=user, status=Transactions.Status.DEBIT_SUCCESS).aggregate(total=Sum('total_amount'))['total'] or 0
+        
 
 
         earnings_data = {

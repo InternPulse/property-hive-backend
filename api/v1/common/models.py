@@ -94,7 +94,7 @@ class Property(models.Model):
     payment_frequency=models.CharField(max_length=255)
     down_payment = models.TextField()
     installment_payment_price = models.IntegerField()
-    keywords = ArrayField(models.CharField(max_length=200), blank=True, default=list)
+    keywords = models.CharField(max_length=1000, blank=True)
     price =models.IntegerField(null=False, blank=True)
     is_sold = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -142,7 +142,8 @@ class Transactions(models.Model):
     propertyid =  models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_transactions')
     class Status(models.TextChoices):
         PENDING = 'P', 'Pending'
-        SUCCESS = 'A', 'Success'
+        CREDIT_SUCCESS = 'C', 'Credit Success'
+        DEBIT_SUCCESS = 'D', 'Debit Success'
         FAILED = 'F', 'Failed'
     status = models.CharField(
         max_length=1,
