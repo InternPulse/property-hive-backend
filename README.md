@@ -2,92 +2,224 @@
 
 ## Project Overview
 
-Live link is at 
+Property Hive is a comprehensive real estate platform backend API built with Django REST Framework. The platform enables property companies to list properties, manage customers, handle transactions, and provides a complete property management solution.
 
-Doc link at 
+**Live API:** [Property Hive API](https://api.propertyhive.com.ng/)
+**API Documentation:** [Postman Collection](https://documenter.getpostman.com/view/34635068/2sAXqzVxVn)
+
+## Features
+
+- **User Management**: Customer and Company registration/authentication
+- **Property Management**: CRUD operations for properties with images and documents
+- **Transaction Processing**: Payment handling and invoice generation
+- **KYC Verification**: Document upload and verification system
+- **Rating System**: Property and company ratings
+- **Profile Management**: Company profiles with social media integration
+- **Email Verification**: Secure email verification system
+- **JWT Authentication**: Token-based authentication with refresh tokens
+
+## Tech Stack
+
+- **Framework**: Django 5.1.1 + Django REST Framework 3.15.2
+- **Database**: PostgreSQL (with psycopg2-binary)
+- **Authentication**: JWT (djangorestframework-simplejwt)
+- **File Storage**: Django Media Files
+- **Email**: SMTP with Gmail
+- **Deployment**: Vercel (configured)
+- **Other**: CORS headers, Whitenoise for static files
 
 ## Installation Instructions
+
 ### Prerequisites
 
-Before setting up the project locally, ensure you have the following prerequisites installed:
+Before setting up the project locally, ensure you have the following installed:
 
-- [Go](https://go.dev) (>=1.22.3)
-- A Database System (e.g., PostgreSQL, MySQL, SQLite)
+- **Python** (>=3.8)
+- **PostgreSQL** (or your preferred database)
+- **pip** (Python package manager)
+- **Git**
 
-### How to run API Locally
+### Local Development Setup
 
-1. Clone the repository:
+1. **Clone the repository:**
+
 ```bash
-git clone https://github.com/InternPulse/famtrust-backend-auth.git
+git clone https://github.com/your-username/property-hive-backend.git
+cd property-hive-backend
 ```
 
-2. Change into the parent directory:
+2. **Create and activate virtual environment:**
+
 ```bash
-cd famtrust-backend-auth
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Set appropriate values for the following Compulsory Environment Variables:
-```txt
-# Postgres connection string
-POSTGRES_DSN=""
-# Secret key for signing JWTs
-JWTKEY=""
-```
+3. **Install dependencies:**
 
-3. Start the App:
 ```bash
-go run ./cmd/api
+pip install -r requirements.txt
 ```
 
-The API should now be running locally at [http://localhost:8001/](http://localhost:8001/).
+4. **Set up environment variables:**
+   Create a `.env` file in the root directory:
 
+```env
+SECRET_KEY=your_secret_key_here
+DEBUG=True
+DATABASE_URL=postgresql://username:password@localhost:5432/property_hive_db
+```
 
-# Commit Standards
+5. **Database setup:**
 
-## Branches
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+```
 
-- **dev** -> pr this branch for everything `backend` related
-- **main** -> **dont touch** this branch, this is what is running in production!
+6. **Run the development server:**
 
-## Contributions
+```bash
+python manage.py runserver
+```
 
-famtrust-backend-auth is open to contributions, but I recommend creating an issue or replying in a comment to let us know what you are working on first that way we don't overwrite each other.
+The API will be available at `http://localhost:8000/`
 
-## Contribution Guidelines
+## API Endpoints
 
-1. Clone the repo `git clone https://github.com/InternPulse/famtrust-backend-auth.git`.
-2. Open your terminal & set the origin branch: `git remote add origin https://github.com/InternPulse/famtrust-backend-auth.git`
-3. Pull origin `git pull origin dev`
-4. Create a new branch for the task you were assigned to, eg `TicketNumber/(Feat/Bug/Fix/Chore)/Ticket-title` : `git checkout -b BA-001/Feat/Sign-Up-from`
-5. After making changes, do `git add .`
-6. Commit your changes with a descriptive commit message : `git commit -m "your commit message"`.
-7. To make sure there are no conflicts, run `git pull origin dev`.
-8. Push changes to your new branch, run `git push -u origin feat-csv-parser`.
-9. Create a pull request to the `dev` branch not `main`.
-10. Ensure to describe your pull request.
-11. > If you've added code that should be tested, add some test examples.
+### Authentication
 
+- `POST /api/v1/login/` - JWT Token generation
+- `POST /api/v1/login/company` - Company login
+- `POST /api/v1/login/customer` - Customer login
+- `POST /api/v1/register/company/` - Company registration
+- `POST /api/v1/register/customer` - Customer registration
+- `POST /api/v1/forgot-password/` - Password reset request
+- `POST /api/v1/reset-password/` - Password reset
+- `POST /api/v1/send-verification-email/` - Send verification email
+- `POST /api/v1/verify-email/` - Email verification
 
-# Merging
-Under any circumstances should you merge a pull request on a specific branch to the `dev` or `main` branch
+### User Management
 
-### _Commit CheatSheet_
+- `GET /api/v1/profile/` - User profile
 
-| Type     |                          | Description                                                                                                 |
-| -------- | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| feat     | Features                 | A new feature                                                                                               |
-| fix      | Bug Fixes                | A bug fix                                                                                                   |
-| docs     | Documentation            | Documentation only changes                                                                                  |
-| style    | Styles                   | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.)      |
-| refactor | Code Refactoring         | A code change that neither fixes a bug nor adds a feature                                                   |
-| perf     | Performance Improvements | A code change that improves performance                                                                     |
-| test     | Tests                    | Adding missing tests or correcting existing tests                                                           |
-| build    | Builds                   | Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |
-| ci       | Continuous Integrations  | Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) |
-| chore    | Chores                   | Other changes that don't modify, backend or test files                                                    |
-| revert   | Reverts                  | Reverts a previous commit                                                                                   |
+### Additional Endpoints
 
-> _Sample Commit Messages_
+- Company management endpoints
+- Transaction processing endpoints
+- Property CRUD operations
+- Media file handling
 
-- `chore: Updated README file`:= `chore` is used because the commit didn't make any changes to the backend or test folders in any way.
-- `feat: Added plugin info endpoints`:= `feat` is used here because the feature was non-existent before the commit.
+## Project Structure
+
+```
+property_hive/
+├── api/v1/
+│   ├── common/          # Shared models (User, Property, etc.)
+│   ├── custom_auth/     # Authentication views and URLs
+│   ├── company/         # Company-specific functionality
+│   └── transaction/     # Transaction management
+├── property_hive/       # Django project settings
+├── media/              # User uploaded files
+├── requirements.txt    # Python dependencies
+├── manage.py          # Django management script
+└── vercel.json        # Vercel deployment config
+```
+
+## Environment Variables
+
+| Variable       | Description                  | Required |
+| -------------- | ---------------------------- | -------- |
+| `SECRET_KEY`   | Django secret key            | Yes      |
+| `DEBUG`        | Debug mode (True/False)      | No       |
+| `DATABASE_URL` | PostgreSQL connection string | Yes      |
+
+## Deployment
+
+The project is configured for deployment on Vercel with the included `vercel.json` configuration.
+
+### Vercel Deployment
+
+1. Install Vercel CLI: `npm i -g vercel`
+2. Deploy: `vercel --prod`
+3. Set environment variables in Vercel dashboard
+
+## Contributing
+
+### Branches
+
+- **main** -> Production branch (protected)
+- **dev** -> Development branch (create PRs here)
+
+### Contribution Workflow
+
+1. **Fork and clone:**
+
+```bash
+git clone https://github.com/your-username/property-hive-backend.git
+cd property-hive-backend
+```
+
+2. **Set up development environment:**
+
+```bash
+git remote add origin https://github.com/your-username/property-hive-backend.git
+git pull origin dev
+```
+
+3. **Create feature branch:**
+
+```bash
+git checkout -b PH-001/feat/your-feature-name
+```
+
+4. **Make changes and commit:**
+
+```bash
+git add .
+git commit -m "feat: add your feature description"
+```
+
+5. **Push and create PR:**
+
+```bash
+git pull origin dev  # Check for conflicts
+git push -u origin PH-001/feat/your-feature-name
+```
+
+6. **Create Pull Request to `dev` branch**
+
+### Commit Standards
+
+| Type       | Description           |
+| ---------- | --------------------- |
+| `feat`     | New feature           |
+| `fix`      | Bug fix               |
+| `docs`     | Documentation changes |
+| `style`    | Code style changes    |
+| `refactor` | Code refactoring      |
+| `test`     | Adding/updating tests |
+| `chore`    | Maintenance tasks     |
+
+**Sample Commits:**
+
+- `feat: add property image upload functionality`
+- `fix: resolve authentication token expiry issue`
+- `docs: update API endpoint documentation`
+
+## Testing
+
+Run tests with:
+
+```bash
+python manage.py test
+```
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support, email: support@propertyhive.com.ng
