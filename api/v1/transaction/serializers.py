@@ -6,7 +6,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transactions
         fields = '__all__'  # Adjust fields as necessary
 
-class  PropertyInvoiceSerializer(serializers.ModelSerializer):
+class PropertyInvoiceSerializer(serializers.ModelSerializer):
     transactionid = serializers.PrimaryKeyRelatedField(queryset=Transactions.objects.all())
     payment_status = serializers.CharField()
     payment_method = serializers.CharField()
